@@ -3,14 +3,13 @@ Dataset for training
 Written by Whalechen
 '''
 
-import math
 import os
-import random
 
-import numpy as np
-from torch.utils.data import Dataset
 import nibabel
+import numpy as np
 from scipy import ndimage
+from torch.utils.data import Dataset
+
 
 class BrainS18Dataset(Dataset):
 

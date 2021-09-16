@@ -34,4 +34,5 @@ jobs:
 
     - name: Tests
       run: |
-        python train.py --ci_test
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        python med3d/train.py --ci_test

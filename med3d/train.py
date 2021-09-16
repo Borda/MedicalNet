@@ -3,18 +3,24 @@ Training code for MRBrainS18 datasets segmentation
 Written by Whalechen
 '''
 
-from setting import parse_opts 
-from med3d.datasets.brains18 import BrainS18Dataset
-from model import generate_model
-import torch
+import os
+import time
+
+import sys
+print(sys.path)
+
 import numpy as np
+import torch
+from scipy import ndimage
 from torch import nn
 from torch import optim
 from torch.utils.data import DataLoader
-import time
+
+from med3d.datasets.brains18 import BrainS18Dataset
 from med3d.utils.logger import log
-from scipy import ndimage
-import os
+from med3d.model import generate_model
+from med3d.setting import parse_opts
+
 
 def train(data_loader, model, optimizer, scheduler, total_epochs, save_interval, save_folder, sets):
     # settings

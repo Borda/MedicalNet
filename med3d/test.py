@@ -1,14 +1,16 @@
-from setting import parse_opts 
-from med3d.datasets.brains18 import BrainS18Dataset
-from model import generate_model
+import os
+
+import nibabel as nib
+import numpy as np
 import torch
-from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from scipy import ndimage
-import nibabel as nib
-import os
+from torch.utils.data import DataLoader
+
+from med3d.datasets.brains18 import BrainS18Dataset
 from med3d.utils.file_process import load_lines
-import numpy as np
+from med3d.model import generate_model
+from med3d.setting import parse_opts
 
 
 def seg_eval(pred, label, clss):

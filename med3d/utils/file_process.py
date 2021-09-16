@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import os
-import os.path as osp
-
 def load_lines(file_path):
     """Read file into a list of lines.
 
