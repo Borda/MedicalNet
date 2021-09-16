@@ -119,7 +119,7 @@ class ResNet(nn.Module):
                  sample_input_W,
                  num_seg_classes,
                  shortcut_type='B',
-                 no_cuda = False):
+                 no_cuda=False):
         self.inplanes = 64
         self.no_cuda = no_cuda
         super(ResNet, self).__init__()
@@ -130,7 +130,7 @@ class ResNet(nn.Module):
             stride=(2, 2, 2),
             padding=(3, 3, 3),
             bias=False)
-            
+
         self.bn1 = nn.BatchNorm3d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool3d(kernel_size=(3, 3, 3), stride=2, padding=1)
@@ -143,30 +143,30 @@ class ResNet(nn.Module):
             block, 512, layers[3], shortcut_type, stride=1, dilation=4)
 
         self.conv_seg = nn.Sequential(
-                                        nn.ConvTranspose3d(
-                                        512 * block.expansion,
-                                        32,
-                                        2,
-                                        stride=2
-                                        ),
-                                        nn.BatchNorm3d(32),
-                                        nn.ReLU(inplace=True),
-                                        nn.Conv3d(
-                                        32,
-                                        32,
-                                        kernel_size=3,
-                                        stride=(1, 1, 1),
-                                        padding=(1, 1, 1),
-                                        bias=False), 
-                                        nn.BatchNorm3d(32),
-                                        nn.ReLU(inplace=True),
-                                        nn.Conv3d(
-                                        32,
-                                        num_seg_classes,
-                                        kernel_size=1,
-                                        stride=(1, 1, 1),
-                                        bias=False) 
-                                        )
+            nn.ConvTranspose3d(
+                512 * block.expansion,
+                32,
+                2,
+                stride=2
+            ),
+            nn.BatchNorm3d(32),
+            nn.ReLU(inplace=True),
+            nn.Conv3d(
+                32,
+                32,
+                kernel_size=3,
+                stride=(1, 1, 1),
+                padding=(1, 1, 1),
+                bias=False),
+            nn.BatchNorm3d(32),
+            nn.ReLU(inplace=True),
+            nn.Conv3d(
+                32,
+                num_seg_classes,
+                kernel_size=1,
+                stride=(1, 1, 1),
+                bias=False)
+        )
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -213,6 +213,7 @@ class ResNet(nn.Module):
         x = self.conv_seg(x)
 
         return x
+
 
 def resnet10(**kwargs):
     """Constructs a ResNet-18 model.

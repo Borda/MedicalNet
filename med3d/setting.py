@@ -5,6 +5,7 @@ Written by Whalechen
 
 import argparse
 
+
 def parse_opts():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -50,7 +51,7 @@ def parse_opts():
         help='Number of total epochs to run')
     parser.add_argument(
         '--input_D',
-    default=56,
+        default=56,
         type=int,
         help='Input size of depth')
     parser.add_argument(
@@ -79,7 +80,7 @@ def parse_opts():
     )
     parser.add_argument(
         '--new_layer_names',
-        #default=['upsample1', 'cmp_layer3', 'upsample2', 'cmp_layer2', 'upsample3', 'cmp_layer1', 'upsample4', 'cmp_conv1', 'conv_seg'],
+        # default=['upsample1', 'cmp_layer3', 'upsample2', 'cmp_layer2', 'upsample3', 'cmp_layer1', 'upsample4', 'cmp_conv1', 'conv_seg'],
         default=['conv_seg'],
         type=list,
         help='New layer except for backbone')
@@ -89,7 +90,7 @@ def parse_opts():
     parser.add_argument(
         '--gpu_id',
         nargs='+',
-        type=int,              
+        type=int,
         help='Gpu id lists')
     parser.add_argument(
         '--model',
@@ -112,5 +113,5 @@ def parse_opts():
         '--ci_test', action='store_true', help='If true, ci testing is used.')
     args = parser.parse_args()
     args.save_folder = "./trails/models/{}_{}".format(args.model, args.model_depth)
-    
+
     return args

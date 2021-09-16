@@ -1,10 +1,10 @@
 name: Install package
 
 # see: https://help.github.com/en/actions/reference/events-that-trigger-workflows
-on:  # Trigger the workflow on push or pull request, but only for the main branch
+on: # Trigger the workflow on push or pull request, but only for the main branch
   push:
-    branches: [master]
-  pull_request: {}
+    branches: [ master ]
+  pull_request: { }
 
 jobs:
   pkg-check:
@@ -37,8 +37,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
-        python-version: [3.7]
+        os: [ ubuntu-20.04 ]
+        python-version: [ 3.7 ]
 
     steps:
       - uses: actions/checkout@master

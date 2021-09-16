@@ -8,9 +8,9 @@ from scipy import ndimage
 from torch.utils.data import DataLoader
 
 from med3d.datasets.brains18 import BrainS18Dataset
-from med3d.utils.file_process import load_lines
 from med3d.model import generate_model
 from med3d.setting import parse_opts
+from med3d.utils.file_process import load_lines
 
 
 def seg_eval(pred, label, clss):
@@ -45,9 +45,10 @@ def seg_eval(pred, label, clss):
 
     return dices
 
+
 def test(data_loader, model, img_names, sets):
     masks = []
-    model.eval() # for testing 
+    model.eval()  # for testing
     for batch_id, batch_data in enumerate(data_loader):
         # forward
         volume = batch_data
@@ -63,12 +64,12 @@ def test(data_loader, model, img_names, sets):
         data = data.get_data()
         [depth, height, width] = data.shape
         mask = probs[0]
-        scale = [1, depth*1.0/mask_d, height*1.0/mask_h, width*1.0/mask_w]
+        scale = [1, depth * 1.0 / mask_d, height * 1.0 / mask_h, width * 1.0 / mask_w]
         mask = ndimage.interpolation.zoom(mask, scale, order=1)
         mask = np.argmax(mask, axis=0)
-        
+
         masks.append(mask)
- 
+
     return masks
 
 
@@ -84,13 +85,13 @@ if __name__ == '__main__':
     net.load_state_dict(checkpoint['state_dict'])
 
     # data tensor
-    testing_data =BrainS18Dataset(sets.data_root, sets.img_list, sets)
+    testing_data = BrainS18Dataset(sets.data_root, sets.img_list, sets)
     data_loader = DataLoader(testing_data, batch_size=1, shuffle=False, num_workers=1, pin_memory=False)
 
     # testing
     img_names = [info.split(" ")[0] for info in load_lines(sets.img_list)]
     masks = test(data_loader, net, img_names, sets)
-    
+
     # evaluation: calculate dice 
     label_names = [info.split(" ")[1] for info in load_lines(sets.img_list)]
     Nimg = len(label_names)
@@ -99,8 +100,8 @@ if __name__ == '__main__':
         label = nib.load(os.path.join(sets.data_root, label_names[idx]))
         label = label.get_data()
         dices[idx, :] = seg_eval(masks[idx], label, range(sets.n_seg_classes))
-    
+
     # print result
     for idx in range(1, sets.n_seg_classes):
         mean_dice_per_task = np.mean(dices[:, idx])
-        print('mean dice for class-{} is {}'.format(idx, mean_dice_per_task))   
+        print('mean dice for class-{} is {}'.format(idx, mean_dice_per_task))
