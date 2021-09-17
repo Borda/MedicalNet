@@ -37,7 +37,7 @@ def seg_eval(pred, label, clss):
         conv = len(np.where(s >= 1)[0]) + inter
         try:
             dice = 2.0 * inter / conv
-        except:
+        except Exception:
             print("conv is zeros when dice = 2.0 * inter / conv")
             dice = -1
 
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     img_names = [info.split(" ")[0] for info in load_lines(sets.img_list)]
     masks = test(data_loader, net, img_names, sets)
 
-    # evaluation: calculate dice 
+    # evaluation: calculate dice
     label_names = [info.split(" ")[1] for info in load_lines(sets.img_list)]
     Nimg = len(label_names)
     dices = np.zeros([Nimg, sets.n_seg_classes])
@@ -104,4 +104,4 @@ if __name__ == '__main__':
     # print result
     for idx in range(1, sets.n_seg_classes):
         mean_dice_per_task = np.mean(dices[:, idx])
-        print('mean dice for class-{} is {}'.format(idx, mean_dice_per_task))
+        print(f'mean dice for class-{idx} is {mean_dice_per_task}')

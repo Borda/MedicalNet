@@ -14,9 +14,9 @@ from torch.utils.data import Dataset
 class BrainS18Dataset(Dataset):
 
     def __init__(self, root_dir, img_list, sets):
-        with open(img_list, 'r') as f:
+        with open(img_list) as f:
             self.img_list = [line.strip() for line in f]
-        print("Processing {} datas".format(len(self.img_list)))
+        print(f"Processing {len(self.img_list)} datas")
         self.root_dir = root_dir
         self.input_D = sets.input_D
         self.input_H = sets.input_H
@@ -55,7 +55,8 @@ class BrainS18Dataset(Dataset):
             mask_array = self.__nii2tensorarray__(mask_array)
 
             assert img_array.shape == mask_array.shape, "img shape:{} is not equal to mask shape:{}".format(
-                img_array.shape, mask_array.shape)
+                img_array.shape, mask_array.shape
+            )
             return img_array, mask_array
 
         elif self.phase == "test":
@@ -124,7 +125,7 @@ class BrainS18Dataset(Dataset):
         Y_max = int(Y_max)
         X_max = int(X_max)
 
-        return data[Z_min: Z_max, Y_min: Y_max, X_min: X_max], label[Z_min: Z_max, Y_min: Y_max, X_min: X_max]
+        return data[Z_min:Z_max, Y_min:Y_max, X_min:X_max], label[Z_min:Z_max, Y_min:Y_max, X_min:X_max]
 
     def __itensity_normalize_one_volume__(self, volume):
         """

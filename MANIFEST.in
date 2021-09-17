@@ -12,7 +12,7 @@ include LICENSE
 # Include the Requirements
 include requirements.txt
 
-exclude *.yml
+exclude *.yml *.yaml
 recursive-include images *.gif *.png
 recursive-include toy_data *.gz *.txt
 

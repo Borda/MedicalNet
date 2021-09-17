@@ -9,20 +9,19 @@ import time
 import numpy as np
 import torch
 from scipy import ndimage
-from torch import nn
-from torch import optim
+from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from med3d.datasets.brains18 import BrainS18Dataset
-from med3d.utils.logger import log
 from med3d.model import generate_model
 from med3d.setting import parse_opts
+from med3d.utils.logger import log
 
 
 def train(data_loader, model, optimizer, scheduler, total_epochs, save_interval, save_folder, sets):
     # settings
     batches_per_epoch = len(data_loader)
-    log.info('{} epochs in total, {} batches per epoch'.format(total_epochs, batches_per_epoch))
+    log.info(f'{total_epochs} epochs in total, {batches_per_epoch} batches per epoch')
     loss_seg = nn.CrossEntropyLoss(ignore_index=-1)
 
     print("Current setting is:")
@@ -34,10 +33,10 @@ def train(data_loader, model, optimizer, scheduler, total_epochs, save_interval,
     model.train()
     train_time_sp = time.time()
     for epoch in range(total_epochs):
-        log.info('Start epoch {}'.format(epoch))
+        log.info(f'Start epoch {epoch}')
 
         scheduler.step()
-        log.info('lr = {}'.format(scheduler.get_lr()))
+        log.info(f'lr = {scheduler.get_lr()}')
 
         for batch_id, batch_data in enumerate(data_loader):
             # getting data batch
@@ -72,25 +71,28 @@ def train(data_loader, model, optimizer, scheduler, total_epochs, save_interval,
 
             avg_batch_time = (time.time() - train_time_sp) / (1 + batch_id_sp)
             log.info(
-                'Batch: {}-{} ({}), loss = {:.3f}, loss_seg = {:.3f}, avg_batch_time = {:.3f}' \
-                    .format(epoch, batch_id, batch_id_sp, loss.item(), loss_value_seg.item(), avg_batch_time))
+                f'Batch: {epoch}-{batch_id} ({batch_id_sp}),'
+                f' loss = {loss.item():.3f},'
+                f' loss_seg = {loss_value_seg.item():.3f},'
+                f' avg_batch_time = {avg_batch_time:.3f}'
+            )
 
             if not sets.ci_test:
                 # save model
                 if batch_id == 0 and batch_id_sp != 0 and batch_id_sp % save_interval == 0:
                     # if batch_id_sp != 0 and batch_id_sp % save_interval == 0:
-                    model_save_path = '{}_epoch_{}_batch_{}.pth.tar'.format(save_folder, epoch, batch_id)
+                    model_save_path = f'{save_folder}_epoch_{epoch}_batch_{batch_id}.pth.tar'
                     model_save_dir = os.path.dirname(model_save_path)
                     if not os.path.exists(model_save_dir):
                         os.makedirs(model_save_dir)
 
-                    log.info('Save checkpoints: epoch = {}, batch_id = {}'.format(epoch, batch_id))
+                    log.info(f'Save checkpoints: epoch = {epoch}, batch_id = {batch_id}')
                     torch.save({
                         'ecpoch': epoch,
                         'batch_id': batch_id,
                         'state_dict': model.state_dict(),
-                        'optimizer': optimizer.state_dict()},
-                        model_save_path)
+                        'optimizer': optimizer.state_dict()
+                    }, model_save_path)
 
     print('Finished training')
     if sets.ci_test:
@@ -121,22 +123,24 @@ if __name__ == '__main__':
     if sets.ci_test:
         params = [{'params': parameters, 'lr': sets.learning_rate}]
     else:
-        params = [
-            {'params': parameters['base_parameters'], 'lr': sets.learning_rate},
-            {'params': parameters['new_parameters'], 'lr': sets.learning_rate * 100}
-        ]
+        params = [{
+            'params': parameters['base_parameters'],
+            'lr': sets.learning_rate
+        }, {
+            'params': parameters['new_parameters'],
+            'lr': sets.learning_rate * 100
+        }]
     optimizer = torch.optim.SGD(params, momentum=0.9, weight_decay=1e-3)
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 
     # train from resume
     if sets.resume_path:
         if os.path.isfile(sets.resume_path):
-            print("=> loading checkpoint '{}'".format(sets.resume_path))
+            print(f"=> loading checkpoint '{sets.resume_path}'")
             checkpoint = torch.load(sets.resume_path)
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
-            print("=> loaded checkpoint '{}' (epoch {})"
-                  .format(sets.resume_path, checkpoint['epoch']))
+            print("=> loaded checkpoint '{}' (epoch {})".format(sets.resume_path, checkpoint['epoch']))
 
     # getting data
     sets.phase = 'train'
@@ -145,9 +149,22 @@ if __name__ == '__main__':
     else:
         sets.pin_memory = True
     training_dataset = BrainS18Dataset(sets.data_root, sets.img_list, sets)
-    data_loader = DataLoader(training_dataset, batch_size=sets.batch_size, shuffle=True, num_workers=sets.num_workers,
-                             pin_memory=sets.pin_memory)
+    data_loader = DataLoader(
+        training_dataset,
+        batch_size=sets.batch_size,
+        shuffle=True,
+        num_workers=sets.num_workers,
+        pin_memory=sets.pin_memory
+    )
 
     # training
-    train(data_loader, model, optimizer, scheduler, total_epochs=sets.n_epochs, save_interval=sets.save_intervals,
-          save_folder=sets.save_folder, sets=sets)
+    train(
+        data_loader,
+        model,
+        optimizer,
+        scheduler,
+        total_epochs=sets.n_epochs,
+        save_interval=sets.save_intervals,
+        save_folder=sets.save_folder,
+        sets=sets
+    )

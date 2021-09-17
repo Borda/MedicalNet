@@ -5,9 +5,7 @@ from med3d.models import resnet
 
 
 def generate_model(opt):
-    assert opt.model in [
-        'resnet'
-    ]
+    assert opt.model in ['resnet']
 
     if opt.model == 'resnet':
         assert opt.model_depth in [10, 18, 34, 50, 101, 152, 200]
@@ -19,7 +17,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 18:
             model = resnet.resnet18(
                 sample_input_W=opt.input_W,
@@ -27,7 +26,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 34:
             model = resnet.resnet34(
                 sample_input_W=opt.input_W,
@@ -35,7 +35,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 50:
             model = resnet.resnet50(
                 sample_input_W=opt.input_W,
@@ -43,7 +44,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 101:
             model = resnet.resnet101(
                 sample_input_W=opt.input_W,
@@ -51,7 +53,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 152:
             model = resnet.resnet152(
                 sample_input_W=opt.input_W,
@@ -59,7 +62,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
         elif opt.model_depth == 200:
             model = resnet.resnet200(
                 sample_input_W=opt.input_W,
@@ -67,7 +71,8 @@ def generate_model(opt):
                 sample_input_D=opt.input_D,
                 shortcut_type=opt.resnet_shortcut,
                 no_cuda=opt.no_cuda,
-                num_seg_classes=opt.n_seg_classes)
+                num_seg_classes=opt.n_seg_classes
+            )
 
     if not opt.no_cuda:
         if len(opt.gpu_id) > 1:
@@ -85,7 +90,7 @@ def generate_model(opt):
 
     # load pretrain
     if opt.phase != 'test' and opt.pretrain_path:
-        print('loading pretrained model {}'.format(opt.pretrain_path))
+        print(f'loading pretrained model {opt.pretrain_path}')
         pretrain = torch.load(opt.pretrain_path)
         pretrain_dict = {k: v for k, v in pretrain['state_dict'].items() if k in net_dict.keys()}
 
@@ -101,8 +106,7 @@ def generate_model(opt):
 
         new_parameters_id = list(map(id, new_parameters))
         base_parameters = list(filter(lambda p: id(p) not in new_parameters_id, model.parameters()))
-        parameters = {'base_parameters': base_parameters,
-                      'new_parameters': new_parameters}
+        parameters = {'base_parameters': base_parameters, 'new_parameters': new_parameters}
 
         return model, parameters
 

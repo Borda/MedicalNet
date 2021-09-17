@@ -40,6 +40,7 @@ resnet_50_23dataset.pth: --model resnet --model_depth 50 --resnet_shortcut B
 
 We transferred the above pre-trained models to the multi-class segmentation task (left lung, right lung and background)
 on Visceral dataset. The results are as follows:
+
 <table class="dataintable">
 <tr>
    <th>Network</th>
@@ -87,11 +88,11 @@ on Visceral dataset. The results are as follows:
 ### Contents
 
 1. [Requirements](#Requirements)
-2. [Installation](#Installation)
-3. [Demo](#Demo)
-4. [Experiments](#Experiments)
-5. [TODO](#TODO)
-6. [Acknowledgement](#Acknowledgement)
+1. [Installation](#Installation)
+1. [Demo](#Demo)
+1. [Experiments](#Experiments)
+1. [TODO](#TODO)
+1. [Acknowledgement](#Acknowledgement)
 
 ### Requirements
 
@@ -236,7 +237,7 @@ GPU：NVIDIA Tesla P40
 - Performance
 
 ```
-Visualization of the segmentation results of our approach vs. the comparison ones after the same training epochs. 
+Visualization of the segmentation results of our approach vs. the comparison ones after the same training epochs.
 It has demonstrated that the efficiency for training convergence and accuracy based on our MedicalNet pre-trained models.
 ```
 

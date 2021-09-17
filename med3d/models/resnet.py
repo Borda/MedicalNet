@@ -5,29 +5,19 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-__all__ = [
-    'ResNet', 'resnet10', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
-    'resnet152', 'resnet200'
-]
+__all__ = ['ResNet', 'resnet10', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152', 'resnet200']
 
 
 def conv3x3x3(in_planes, out_planes, stride=1, dilation=1):
     # 3x3x3 convolution with padding
     return nn.Conv3d(
-        in_planes,
-        out_planes,
-        kernel_size=3,
-        dilation=dilation,
-        stride=stride,
-        padding=dilation,
-        bias=False)
+        in_planes, out_planes, kernel_size=3, dilation=dilation, stride=stride, padding=dilation, bias=False
+    )
 
 
 def downsample_basic_block(x, planes, stride, no_cuda=False):
     out = F.avg_pool3d(x, kernel_size=1, stride=stride)
-    zero_pads = torch.Tensor(
-        out.size(0), planes - out.size(1), out.size(2), out.size(3),
-        out.size(4)).zero_()
+    zero_pads = torch.Tensor(out.size(0), planes - out.size(1), out.size(2), out.size(3), out.size(4)).zero_()
     if not no_cuda:
         if isinstance(out.data, torch.cuda.FloatTensor):
             zero_pads = zero_pads.cuda()
@@ -41,7 +31,7 @@ class BasicBlock(nn.Module):
     expansion = 1
 
     def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None):
-        super(BasicBlock, self).__init__()
+        super().__init__()
         self.conv1 = conv3x3x3(inplanes, planes, stride=stride, dilation=dilation)
         self.bn1 = nn.BatchNorm3d(planes)
         self.relu = nn.ReLU(inplace=True)
@@ -73,11 +63,12 @@ class Bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None):
-        super(Bottleneck, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv3d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm3d(planes)
         self.conv2 = nn.Conv3d(
-            planes, planes, kernel_size=3, stride=stride, dilation=dilation, padding=dilation, bias=False)
+            planes, planes, kernel_size=3, stride=stride, dilation=dilation, padding=dilation, bias=False
+        )
         self.bn2 = nn.BatchNorm3d(planes)
         self.conv3 = nn.Conv3d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm3d(planes * 4)
@@ -111,61 +102,34 @@ class Bottleneck(nn.Module):
 
 class ResNet(nn.Module):
 
-    def __init__(self,
-                 block,
-                 layers,
-                 sample_input_D,
-                 sample_input_H,
-                 sample_input_W,
-                 num_seg_classes,
-                 shortcut_type='B',
-                 no_cuda=False):
+    def __init__(
+        self,
+        block,
+        layers,
+        sample_input_D,
+        sample_input_H,
+        sample_input_W,
+        num_seg_classes,
+        shortcut_type='B',
+        no_cuda=False
+    ):
         self.inplanes = 64
         self.no_cuda = no_cuda
-        super(ResNet, self).__init__()
-        self.conv1 = nn.Conv3d(
-            1,
-            64,
-            kernel_size=7,
-            stride=(2, 2, 2),
-            padding=(3, 3, 3),
-            bias=False)
+        super().__init__()
+        self.conv1 = nn.Conv3d(1, 64, kernel_size=7, stride=(2, 2, 2), padding=(3, 3, 3), bias=False)
 
         self.bn1 = nn.BatchNorm3d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool3d(kernel_size=(3, 3, 3), stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64, layers[0], shortcut_type)
-        self.layer2 = self._make_layer(
-            block, 128, layers[1], shortcut_type, stride=2)
-        self.layer3 = self._make_layer(
-            block, 256, layers[2], shortcut_type, stride=1, dilation=2)
-        self.layer4 = self._make_layer(
-            block, 512, layers[3], shortcut_type, stride=1, dilation=4)
+        self.layer2 = self._make_layer(block, 128, layers[1], shortcut_type, stride=2)
+        self.layer3 = self._make_layer(block, 256, layers[2], shortcut_type, stride=1, dilation=2)
+        self.layer4 = self._make_layer(block, 512, layers[3], shortcut_type, stride=1, dilation=4)
 
         self.conv_seg = nn.Sequential(
-            nn.ConvTranspose3d(
-                512 * block.expansion,
-                32,
-                2,
-                stride=2
-            ),
-            nn.BatchNorm3d(32),
-            nn.ReLU(inplace=True),
-            nn.Conv3d(
-                32,
-                32,
-                kernel_size=3,
-                stride=(1, 1, 1),
-                padding=(1, 1, 1),
-                bias=False),
-            nn.BatchNorm3d(32),
-            nn.ReLU(inplace=True),
-            nn.Conv3d(
-                32,
-                num_seg_classes,
-                kernel_size=1,
-                stride=(1, 1, 1),
-                bias=False)
+            nn.ConvTranspose3d(512 * block.expansion, 32, 2, stride=2), nn.BatchNorm3d(32), nn.ReLU(inplace=True),
+            nn.Conv3d(32, 32, kernel_size=3, stride=(1, 1, 1), padding=(1, 1, 1), bias=False), nn.BatchNorm3d(32),
+            nn.ReLU(inplace=True), nn.Conv3d(32, num_seg_classes, kernel_size=1, stride=(1, 1, 1), bias=False)
         )
 
         for m in self.modules():
@@ -180,18 +144,13 @@ class ResNet(nn.Module):
         if stride != 1 or self.inplanes != planes * block.expansion:
             if shortcut_type == 'A':
                 downsample = partial(
-                    downsample_basic_block,
-                    planes=planes * block.expansion,
-                    stride=stride,
-                    no_cuda=self.no_cuda)
+                    downsample_basic_block, planes=planes * block.expansion, stride=stride, no_cuda=self.no_cuda
+                )
             else:
                 downsample = nn.Sequential(
-                    nn.Conv3d(
-                        self.inplanes,
-                        planes * block.expansion,
-                        kernel_size=1,
-                        stride=stride,
-                        bias=False), nn.BatchNorm3d(planes * block.expansion))
+                    nn.Conv3d(self.inplanes, planes * block.expansion, kernel_size=1, stride=stride, bias=False),
+                    nn.BatchNorm3d(planes * block.expansion)
+                )
 
         layers = []
         layers.append(block(self.inplanes, planes, stride=stride, dilation=dilation, downsample=downsample))

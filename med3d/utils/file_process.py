@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding: utf-8
+
 
 def load_lines(file_path):
     """Read file into a list of lines.
@@ -10,6 +10,6 @@ def load_lines(file_path):
     Output
       lines: an array of lines
     """
-    with open(file_path, 'r') as fio:
+    with open(file_path) as fio:
         lines = fio.read().splitlines()
     return lines
