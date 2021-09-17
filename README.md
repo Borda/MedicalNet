@@ -1,4 +1,8 @@
-<img src="images/logo.png" align=mid />
+![Logo](images/logo.png)
+
+[![CI testing](https://github.com/Borda/MedicalNet/actions/workflows/ci-testing.yml/badge.svg?branch=master&event=push)](https://github.com/Borda/MedicalNet/actions/workflows/ci-testing.yml)
+[![Install package](https://github.com/Borda/MedicalNet/actions/workflows/ci-install-pkg.yml/badge.svg?branch=master&event=push)](https://github.com/Borda/MedicalNet/actions/workflows/ci-install-pkg.yml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Borda/MedicalNet/master.svg)](https://results.pre-commit.ci/latest/github/Borda/MedicalNet/master)
 
 # MedicalNet
 
@@ -18,12 +22,12 @@ MedicalNet is released under the MIT License (refer to the LICENSE file for deta
 If you use this code or pre-trained models, please cite the following:
 
 ```
-    @article{chen2019med3d,
-        title={Med3D: Transfer Learning for 3D Medical Image Analysis},
-        author={Chen, Sihong and Ma, Kai and Zheng, Yefeng},
-        journal={arXiv preprint arXiv:1904.00625},
-        year={2019}
-    }
+@article{chen2019med3d,
+    title={Med3D: Transfer Learning for 3D Medical Image Analysis},
+    author={Chen, Sihong and Ma, Kai and Zheng, Yefeng},
+    journal={arXiv preprint arXiv:1904.00625},
+    year={2019}
+}
 ```
 
 ### Update(2019/07/30)
@@ -104,7 +108,7 @@ on Visceral dataset. The results are as follows:
 ### Installation
 
 - Install Python 3.7.0
-- pip install -r requirements.txt
+- `pip install -r requirements.txt`
 
 ### Demo
 
@@ -152,186 +156,141 @@ resnet_200.pth: --model resnet --model_depth 200 --resnet_shortcut B
 - After successfully completing basic installation, you'll be ready to run the demo.
 
 1. Clone the MedicalNet repository
-
-```
-git clone https://github.com/Tencent/MedicalNet
-```
-
-2. Download data & pre-trained
+   ```bash
+   git clone https://github.com/Tencent/MedicalNet
+   ```
+1. Download data & pre-trained
    models ([Google Drive](https://drive.google.com/file/d/13tnSvXY7oDIEloNFiGTsjUIYfS3g3BfG/view?usp=sharing)
    or [Tencent Weiyun](https://share.weiyun.com/55sZyIx))
-
    Unzip and move files
-
-```
-mv MedicalNet_pytorch_files.zip MedicalNet/.
-cd MedicalNet
-unzip MedicalNet_pytorch_files.zip
-```
-
-3. Run the training code (e.g. 3D-ResNet-50)
-
-```
-python train.py --gpu_id 0 1    # multi-gpu training on gpu 0,1
-or
-python train.py --gpu_id 0    # single-gpu training on gpu 0
-```
-
-4. Run the testing code (e.g. 3D-ResNet-50)
-
-```
-python test.py --gpu_id 0 --resume_path trails/models/resnet_50_epoch_110_batch_0.pth.tar --img_list data/val.txt
-```
+   ```bash
+   mv MedicalNet_pytorch_files.zip MedicalNet/.
+   cd MedicalNet
+   unzip MedicalNet_pytorch_files.zip
+   ```
+1. Run the training code (e.g. 3D-ResNet-50)
+   ```bash
+   python train.py --gpu_id 0 1    # multi-gpu training on gpu 0,1
+   # OR
+   python train.py --gpu_id 0    # single-gpu training on gpu 0
+   ```
+1. Run the testing code (e.g. 3D-ResNet-50)
+   ```bash
+   python test.py --gpu_id 0 --resume_path trails/models/resnet_50_epoch_110_batch_0.pth.tar --img_list data/val.txt
+   ```
 
 ### Experiments
 
-- Computational Cost
+- **Computational Cost**
 
-```
-GPU：NVIDIA Tesla P40
-```
+  ```
+  GPU：NVIDIA Tesla P40
+  ```
 
-<table class="dataintable">
-<tr>
-   <th class="dataintable">Network</th>
-   <th>Paramerers (M)</th>
-   <th>Running time (s)</th>
-</tr>
-<tr>
-   <td>3D-ResNet10</td>
-   <td>14.36</td>
-   <td>0.18</td>
-</tr class="dataintable">
-<tr>
-   <td>3D-ResNet18</td>
-   <td>32.99</td>
-   <td>0.19</td>
-</tr>
-<tr>
-   <td>3D-ResNet34</td>
-   <td>63.31</td>
-   <td>0.22</td>
-</tr>
-<tr>
-   <td>3D-ResNet50</td>
-   <td>46.21</td>
-   <td>0.21</td>
-</tr>
-<tr>
-   <td>3D-ResNet101</td>
-   <td>85.31</td>
-   <td>0.29</td>
-</tr>
-<tr>
-   <td>3D-ResNet152</td>
-   <td>117.51</td>
-   <td>0.34</td>
-</tr>
-<tr>
-   <td>3D-ResNet200</td>
-   <td>126.74</td>
-   <td>0.45</td>
-</tr>
-</table>
+  | Network      | Paramerers (M) | Running time (s) |
+  | ------------ | -------------- | ---------------- |
+  | 3D-ResNet10  | 14.36          | 0.18             |
+  | 3D-ResNet18  | 32.99          | 0.19             |
+  | 3D-ResNet34  | 63.31          | 0.22             |
+  | 3D-ResNet50  | 46.21          | 0.21             |
+  | 3D-ResNet101 | 85.31          | 0.29             |
+  | 3D-ResNet152 | 117.51         | 0.34             |
+  | 3D-ResNet200 | 126.74         | 0.45             |
 
-- Performance
+- **Performance**
 
-```
-Visualization of the segmentation results of our approach vs. the comparison ones after the same training epochs.
-It has demonstrated that the efficiency for training convergence and accuracy based on our MedicalNet pre-trained models.
-```
+  Visualization of the segmentation results of our approach vs. the comparison ones after the same training epochs.
+  It has demonstrated that the efficiency for training convergence and accuracy based on our MedicalNet pre-trained models.
 
-<img src="images/efficiency.gif" width="812" hegiht="294" align=mid />
+  ![Compare results](images/efficiency.gif)
 
-```
-Results of transfer MedicalNet pre-trained models to lung segmentation (LungSeg) and pulmonary nodule classification (NoduleCls) with Dice and accuracy evaluation metrics, respectively.
-```
+  Results of transfer MedicalNet pre-trained models to lung segmentation (LungSeg) and pulmonary nodule classification (NoduleCls) with Dice and accuracy evaluation metrics, respectively.
 
-<table class="dataintable">
-<tr>
-   <th>Network</th>
-   <th>Pretrain</th>
-   <th>LungSeg(Dice)</th>
-   <th>NoduleCls(accuracy)</th>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet10</td>
-   <td>Train from scratch</td>
-   <td>71.30%</td>
-   <td>79.80%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>87.16%</td>
-    <td>86.87%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet18</td>
-   <td>Train from scratch</td>
-   <td>75.22%</td>
-   <td>80.80%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>87.26%</td>
-    <td>88.89%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet34</td>
-   <td>Train from scratch</td>
-   <td>76.82%</td>
-   <td>83.84%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>89.31%</td>
-    <td>89.90%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet50</td>
-   <td>Train from scratch</td>
-   <td>71.75%</td>
-   <td>84.85%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>93.31%</td>
-    <td>89.90%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet101</td>
-   <td>Train from scratch</td>
-   <td>72.10%</td>
-   <td>81.82%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>92.79%</td>
-    <td>90.91%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet152</td>
-   <td>Train from scratch</td>
-   <td>73.29%</td>
-   <td>73.74%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>92.33%</td>
-    <td>90.91%</td>
-</tr>
-<tr>
-   <td rowspan="2">3D-ResNet200</td>
-   <td>Train from scratch</td>
-   <td>71.29%</td>
-   <td>76.77%</td>
-</tr>
-<tr>
-    <td>MedicalNet</td>
-    <td>92.06%</td>
-    <td>90.91%</td>
-</tr>
-</table>
+   <table class="dataintable">
+   <tr>
+      <th>Network</th>
+      <th>Pretrain</th>
+      <th>LungSeg(Dice)</th>
+      <th>NoduleCls(accuracy)</th>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet10</td>
+      <td>Train from scratch</td>
+      <td>71.30%</td>
+      <td>79.80%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>87.16%</td>
+       <td>86.87%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet18</td>
+      <td>Train from scratch</td>
+      <td>75.22%</td>
+      <td>80.80%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>87.26%</td>
+       <td>88.89%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet34</td>
+      <td>Train from scratch</td>
+      <td>76.82%</td>
+      <td>83.84%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>89.31%</td>
+       <td>89.90%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet50</td>
+      <td>Train from scratch</td>
+      <td>71.75%</td>
+      <td>84.85%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>93.31%</td>
+       <td>89.90%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet101</td>
+      <td>Train from scratch</td>
+      <td>72.10%</td>
+      <td>81.82%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>92.79%</td>
+       <td>90.91%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet152</td>
+      <td>Train from scratch</td>
+      <td>73.29%</td>
+      <td>73.74%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>92.33%</td>
+       <td>90.91%</td>
+   </tr>
+   <tr>
+      <td rowspan="2">3D-ResNet200</td>
+      <td>Train from scratch</td>
+      <td>71.29%</td>
+      <td>76.77%</td>
+   </tr>
+   <tr>
+       <td>MedicalNet</td>
+       <td>92.06%</td>
+       <td>90.91%</td>
+   </tr>
+   </table>
 
 - Please refer to [Med3D: Transfer Learning for 3D Medical Image Analysis](https://arxiv.org/abs/1904.00625) for more
   details：
