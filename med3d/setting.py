@@ -1,7 +1,7 @@
-'''
-Configs for training & testing
-Written by Whalechen
-'''
+"""Configs for training & testing.
+
+Written by Whalechen.
+"""
 
 import argparse
 

@@ -1,7 +1,7 @@
-'''
-Training code for MRBrainS18 datasets segmentation
-Written by Whalechen
-'''
+"""Training code for MRBrainS18 datasets segmentation.
+
+Written by Whalechen.
+"""
 
 import os
 import time

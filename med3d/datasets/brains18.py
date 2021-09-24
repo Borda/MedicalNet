@@ -1,7 +1,7 @@
-'''
-Dataset for training
-Written by Whalechen
-'''
+"""Dataset for training.
+
+Written by Whalechen.
+"""
 
 import os
 
@@ -77,9 +77,7 @@ class BrainS18Dataset(Dataset):
             return img_array
 
     def __drop_invalid_range__(self, volume, label=None):
-        """
-        Cut off the invalid area
-        """
+        """Cut off the invalid area."""
         zero_value = volume[0, 0, 0]
         non_zeros_idx = np.where(volume != zero_value)
 
@@ -145,9 +143,7 @@ class BrainS18Dataset(Dataset):
         return out
 
     def __resize_data__(self, data):
-        """
-        Resize the data to the input size
-        """
+        """Resize the data to the input size."""
         [depth, height, width] = data.shape
         scale = [self.input_D * 1.0 / depth, self.input_H * 1.0 / height, self.input_W * 1.0 / width]
         data = ndimage.interpolation.zoom(data, scale, order=0)
@@ -155,9 +151,7 @@ class BrainS18Dataset(Dataset):
         return data
 
     def __crop_data__(self, data, label):
-        """
-        Random crop with different methods:
-        """
+        """Random crop with different methods:"""
         # random center crop
         data, label = self.__random_center_crop__(data, label)
 

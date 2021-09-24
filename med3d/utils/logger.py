@@ -1,6 +1,4 @@
-'''
-Written by Whalechen
-'''
+"""Written by Whalechen."""
 
 import logging
 
